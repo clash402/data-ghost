@@ -4,7 +4,7 @@
 
 > *It’s the ghost in your spreadsheet.* 🕵️‍♂️
 
-&#x20;
+Try it out! https://data-ghost.vercel.app/
 
 ---
 
