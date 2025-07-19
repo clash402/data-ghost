@@ -1,0 +1,68 @@
+[project]
+name = "data-ghost-backend"
+version = "0.1.0"
+description = "Backend API for Data Ghost - CSV data analysis with AI"
+authors = [
+    {name = "Data Ghost Team", email = "team@dataghost.com"},
+]
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "langchain>=0.1.0",
+    "langgraph>=0.0.20",
+    "openai>=1.3.0",
+    "chromadb>=0.4.0",
+    "sqlalchemy>=2.0.0",
+    "python-multipart>=0.0.6",
+    "tiktoken>=0.5.0",
+    "httpx>=0.25.0",
+    "openai-whisper>=20231117",
+    "elevenlabs>=0.2.0",
+    "pydantic-settings>=2.10.1",
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.25.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.7.0",
+]
+
+[project.scripts]
+data-ghost = "src.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
