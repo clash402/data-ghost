@@ -44,10 +44,10 @@ python run.py
 uv run python -m src.main
 
 # Option 3: Using uvicorn directly
-uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+uv run uvicorn src.main:app --host 0.0.0.0 --port 8080 --reload
 ```
 
-The API will be available at `http://localhost:8000`
+The API will be available at `http://localhost:8080`
 
 ## API Endpoints
 

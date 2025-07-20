@@ -14,8 +14,8 @@ echo "📦 Installing Python dependencies..."
 uv pip sync
 
 # Start the FastAPI server
-echo "🔥 Starting FastAPI server on http://localhost:8000"
+echo "🔥 Starting FastAPI server on http://localhost:8080"
 echo "Press Ctrl+C to stop"
 echo ""
 
-uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload 
+uvicorn src.main:app --host 0.0.0.0 --port 8080 --reload 

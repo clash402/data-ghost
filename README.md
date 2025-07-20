@@ -167,7 +167,7 @@ npm run dev
 
 **Access the application:**
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
+- Backend API: http://localhost:8080
 
 ---
 

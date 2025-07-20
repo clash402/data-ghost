@@ -17,8 +17,8 @@ COPY . .
 # Sync and install dependencies using uv
 RUN uv pip sync
 
-# Expose port (Fly expects 8000)
-EXPOSE 8000
+# Expose port (Fly expects 8080)
+EXPOSE 8080
 
 # Start FastAPI using uvicorn
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
