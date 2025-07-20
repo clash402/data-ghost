@@ -60,7 +60,7 @@ function DataGhostApp() {
               Data Ghost
             </h1>
             <p className="text-xl text-muted-foreground">
-              Upload your CSV data and ask questions about it!
+              Upload your CSV data and ask questions about it
             </p>
           </div>
 
