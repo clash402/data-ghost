@@ -9,8 +9,8 @@ primary_region = 'iad'
 [experimental]
   auto_rollback = true
 
-[build]
-  image = 'python:3.11-slim'
+# [build]
+#   image = 'python:3.11-slim'
 
 [env]
   PORT = '8080'

@@ -1,21 +1,47 @@
-# Use the official Python image
-FROM python:3.11-slim
+# Build stage
+FROM python:3.11-slim AS builder
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install uv
-RUN pip install uv
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
 WORKDIR /app
 
-# Copy project files
-COPY . .
+# Copy dependency files first for better caching
+COPY pyproject.toml README.md ./
 
-# Create virtual environment and sync dependencies using uv
-RUN uv venv && uv pip sync pyproject.toml
+# Install dependencies in a virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --upgrade pip && \
+    pip install fastapi uvicorn[standard] pydantic langchain langgraph openai chromadb sqlalchemy python-multipart tiktoken httpx openai-whisper elevenlabs pydantic-settings
+
+# Production stage
+FROM python:3.11-slim AS production
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Copy virtual environment from builder stage
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set the working directory
+WORKDIR /app
+
+# Copy application code
+COPY src/ ./src/
+COPY main.py ./
+
+# Create necessary directories
+RUN mkdir -p ./chroma_db ./uploads
 
 # Expose port (Fly expects 8080)
 EXPOSE 8080
