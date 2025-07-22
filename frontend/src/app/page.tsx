@@ -54,7 +54,7 @@ function DataGhostApp() {
       // Always handle errors gracefully, never throw
       setChatHistory((prev) => [
         ...prev,
-        { role: 'assistant', content: `Sorry, I couldn't get an answer from the server. This might be because the backend service is offline, your internet connection is unstable, or there was a temporary issue.\n\nPlease check your connection and try again. If the problem persists, make sure the backend server is running and reachable.` },
+        { role: 'assistant', content: `Pardon the ethereal interruption! I'm temporarily out haunting our server room while some system upgrades take place. Give me a few moments to materialize back, and I'll be ready to help you uncover the insights hiding in your data.` },
       ]);
       setError(null); // Clear any previous error to avoid overlays
       // Optionally log error for debugging
