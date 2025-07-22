@@ -2,16 +2,12 @@
 
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { UploadForm } from '@/components/UploadForm';
 import { CSVData } from '@/types';
 import { useAskQuery } from '@/hooks/useAskQuery';
-import Logo from '@/components/Logo';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import ChatMessage from '@/components/ChatMessage';
-import { countTokens } from '@/lib/csv-parser';
 import ChatBox from '@/components/ChatBox';
-import UploadSection from '@/components/UploadSection';
-import ErrorAlert from '@/components/ErrorAlert';
+import { UploadForm } from '@/components/UploadForm';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -67,15 +63,12 @@ function DataGhostApp() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Top Header */}
-      <header className="w-full flex items-center px-4 py-4">
-        <Logo />
-      </header>
-      <main className="flex-1 flex flex-col items-center gap-24">
-        <div className="w-full max-w-3xl flex-1 flex flex-col px-4 mt-8" style={{ maxHeight: 'calc(100vh - 2 * 5rem - 2 * 2rem)' }}>
+    <div className="min-h-screen bg-background flex flex-col transition-colors duration-500">
+      <Header />
+      <main className="flex-1 flex flex-col items-center gap-16 sm:gap-20 lg:gap-24">
+        <div className="w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl flex-1 flex flex-col px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8" style={{ maxHeight: 'calc(100vh - 2 * 5rem - 2 * 2rem)' }}>
           {!csvData ? (
-            <UploadSection onFileUpload={handleFileUpload} onError={handleError} error={error} />
+            <UploadForm onFileUpload={handleFileUpload} onError={handleError} error={error} />
           ) : (
             <ChatBox
               chatHistory={chatHistory}
