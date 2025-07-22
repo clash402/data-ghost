@@ -8,6 +8,8 @@ import { CSVData, AskQueryResponse } from '@/types';
 import { useAskQuery } from '@/hooks/useAskQuery';
 import Logo from '@/components/Logo';
 import Footer from '@/components/Footer';
+import ChatMessage from '@/components/ChatMessage';
+import { countTokens } from '@/lib/csv-parser';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -15,7 +17,7 @@ const queryClient = new QueryClient();
 function DataGhostApp() {
   const [csvData, setCsvData] = useState<CSVData | null>(null);
   const [question, setQuestion] = useState('');
-  const [currentAnswer, setCurrentAnswer] = useState<AskQueryResponse | null>(null);
+  const [chatHistory, setChatHistory] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
   const [error, setError] = useState<string | null>(null);
 
   const askQueryMutation = useAskQuery();
@@ -40,15 +42,25 @@ function DataGhostApp() {
       return;
     }
 
+    // Add user message
+    setChatHistory((prev) => [...prev, { role: 'user', content: question.trim() }]);
+    setQuestion('');
     try {
       const response = await askQueryMutation.mutateAsync({
         question: question.trim(),
         context: JSON.stringify(csvData),
       });
-      setCurrentAnswer(response);
+      setChatHistory((prev) => [...prev, { role: 'assistant', content: response.answer }]);
       setError(null);
     } catch (err) {
-      setError('Failed to get answer. Please try again.');
+      // Always handle errors gracefully, never throw
+      setChatHistory((prev) => [
+        ...prev,
+        { role: 'assistant', content: `Sorry, I couldn't get an answer from the server. This might be because the backend service is offline, your internet connection is unstable, or there was a temporary issue.\n\nPlease check your connection and try again. If the problem persists, make sure the backend server is running and reachable.` },
+      ]);
+      setError(null); // Clear any previous error to avoid overlays
+      // Optionally log error for debugging
+      // console.error('Chat error:', err);
     }
   };
 
@@ -58,78 +70,54 @@ function DataGhostApp() {
       <header className="w-full flex items-center px-4 py-4">
         <Logo />
       </header>
-      <main className="flex-1">
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto space-y-8">
-            {/* Description */}
-            <div className="text-center space-y-4">
-              <p className="text-xl text-muted-foreground">
-                Upload your CSV data and ask questions about it!
-              </p>
-            </div>
-
-            {/* Error Display */}
-            {error && (
-              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-                <p className="text-destructive text-sm">{error}</p>
-              </div>
-            )}
-
-            {/* Upload Section */}
-            <div className="flex justify-center">
+      <main className="flex-1 flex flex-col items-center gap-24">
+        <div className="w-full max-w-3xl flex-1 flex flex-col px-4 mt-8" style={{ maxHeight: 'calc(100vh - 2 * 5rem - 2 * 2rem)' }}>
+          {!csvData ? (
+            <div className="flex flex-1 items-center justify-center">
               <UploadForm onFileUpload={handleFileUpload} onError={handleError} />
             </div>
-
-            {/* Data Summary */}
-            {csvData && (
-              <div className="bg-card border rounded-lg p-6">
-                <h2 className="text-xl font-semibold mb-4">Data Summary</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <span className="font-medium">Columns:</span> {csvData.headers.length}
+          ) : (
+            <div className="flex flex-col h-full max-h-[80vh] border rounded-lg bg-card overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background">
+                {chatHistory.length === 0 && (
+                  <div className="text-center text-muted-foreground text-sm py-8">
+                    Ask a question about your uploaded CSV to get started!
                   </div>
-                  <div>
-                    <span className="font-medium">Rows:</span> {csvData.totalRows}
-                  </div>
-                  <div>
-                    <span className="font-medium">File Size:</span> {csvData.headers.join(', ')}
-                  </div>
-                </div>
+                )}
+                {chatHistory.map((msg, idx) => (
+                  <ChatMessage key={idx} role={msg.role} content={msg.content} />
+                ))}
+                {askQueryMutation.isPending && (
+                  <ChatMessage role="assistant" content="Thinking..." isLoading />
+                )}
               </div>
-            )}
-
-            {/* Query Section */}
-            {csvData && (
-              <div className="space-y-4">
-                <div className="flex gap-4">
+              <form
+                className="flex flex-col gap-1 border-t bg-background px-4 py-3"
+                onSubmit={e => { e.preventDefault(); handleAskQuestion(); }}
+              >
+                <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    placeholder="Ask a question about your data..."
+                    placeholder="Type your question about the data..."
                     value={question}
-                    onChange={(e) => setQuestion(e.target.value)}
+                    onChange={e => setQuestion(e.target.value)}
                     className="flex-1 px-4 py-2 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground"
-                    onKeyPress={(e) => e.key === 'Enter' && handleAskQuestion()}
+                    disabled={askQueryMutation.isPending}
                   />
                   <button
-                    onClick={handleAskQuestion}
+                    type="submit"
                     disabled={askQueryMutation.isPending || !question.trim()}
                     className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {askQueryMutation.isPending ? 'Asking...' : 'Ask'}
+                    {askQueryMutation.isPending ? 'Sending...' : 'Send'}
                   </button>
                 </div>
-
-                {/* Answer Display */}
-                {currentAnswer && (
-                  <AnswerCard
-                    question={question}
-                    answer={currentAnswer}
-                    isLoading={askQueryMutation.isPending}
-                  />
-                )}
-              </div>
-            )}
-          </div>
+                <div className="text-xs text-muted-foreground mt-1 px-1">
+                  Prompt tokens: {countTokens(question)} &bull; Completion tokens: 0 &bull; Estimated cost $0.0000
+                </div>
+              </form>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
