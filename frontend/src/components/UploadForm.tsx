@@ -57,17 +57,25 @@ export const UploadForm = ({ onFileUpload, onError, error }: UploadFormProps) =>
         </div>
         <div className="space-y-3 sm:space-y-4">
           <div className="space-y-2">
-            <label htmlFor="file-upload" className="text-xs sm:text-sm lg:text-base font-medium text-slate-700 dark:text-slate-300 transition-colors duration-300">
-              CSV File
-            </label>
-            <input
-              id="file-upload"
-              type="file"
-              accept=".csv"
-              onChange={handleFileChange}
-              disabled={isLoading}
-              className="ghost-input w-full text-xs py-4 sm:text-sm lg:text-base"
-            />
+            <div className="relative">
+              <input
+                id="file-upload"
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                disabled={isLoading}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              />
+              <div 
+                className="ghost-input w-full text-xs py-4 sm:text-sm lg:text-base flex items-center justify-between px-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-200"
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                <span className="text-slate-600 dark:text-slate-400">
+                  {selectedFile ? selectedFile.name : 'Select a CSV file...'}
+                </span>
+                <Upload className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+              </div>
+            </div>
           </div>
           <button
             onClick={handleUpload}

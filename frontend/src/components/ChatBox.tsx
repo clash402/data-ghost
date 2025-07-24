@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import { countTokens } from '@/lib/csv-parser';
 
@@ -11,6 +11,16 @@ interface ChatBoxProps {
 }
 
 export default function ChatBox({ chatHistory, question, setQuestion, onSend, isLoading }: ChatBoxProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatHistory, isLoading]);
+
   return (
     <div className="flex flex-col h-full max-h-[70vh] sm:max-h-[75vh] lg:max-h-[80vh] border rounded-xl glass-card overflow-hidden transition-all duration-300">
       <div className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 bg-transparent">
@@ -25,6 +35,7 @@ export default function ChatBox({ chatHistory, question, setQuestion, onSend, is
         {isLoading && (
           <ChatMessage role="assistant" content="Thinking..." isLoading />
         )}
+        <div ref={messagesEndRef} />
       </div>
       <form
         className="flex flex-col gap-1 sm:gap-2 border-t bg-transparent px-3 sm:px-4 lg:px-6 py-3 sm:py-4"
