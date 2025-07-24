@@ -1,17 +1,24 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    // Initialize theme on client side only
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    let theme = localStorage.getItem('theme');
+    if (!theme) {
+      localStorage.setItem('theme', 'light');
+      theme = 'light';
+    }
+    if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+    setMounted(true);
   }, []);
 
+  if (!mounted) return null;
   return <>{children}</>;
 } 
