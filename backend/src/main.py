@@ -37,8 +37,8 @@ def create_app() -> FastAPI:
         title=settings.app_name,
         version=settings.app_version,
         description="Backend API for Data Ghost - CSV data analysis with AI",
-        docs_url="/docs" if settings.debug else None,
-        redoc_url="/redoc" if settings.debug else None,
+        docs_url="/docs",
+        redoc_url="/redoc",
         lifespan=lifespan,
     )
 
@@ -62,9 +62,7 @@ def create_app() -> FastAPI:
         return {
             "message": "Data Ghost Backend API",
             "version": settings.app_version,
-            "docs": (
-                "/docs" if settings.debug else "Documentation disabled in production"
-            ),
+            "docs": "/docs",
         }
 
     return app
