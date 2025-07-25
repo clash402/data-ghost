@@ -16,6 +16,7 @@ async def health_check() -> Dict[str, Any]:
         "status": "healthy!",
         "service": settings.app_name,
         "version": settings.app_version,
+        "environment": "development" if settings.debug else "production",
     }
 
 
@@ -26,6 +27,7 @@ async def detailed_health_check() -> Dict[str, Any]:
         "status": "healthy",
         "service": settings.app_name,
         "version": settings.app_version,
+        "environment": "development" if settings.debug else "production",
         "components": {},
     }
 
@@ -57,6 +59,19 @@ async def detailed_health_check() -> Dict[str, Any]:
         health_status["components"]["file_storage"] = {
             "status": "unhealthy",
             "error": str(e),
+        }
+        health_status["status"] = "degraded"
+
+    # Check OpenAI configuration
+    if settings.openai_api_key:
+        health_status["components"]["openai"] = {
+            "status": "configured",
+            "model": settings.openai_model,
+        }
+    else:
+        health_status["components"]["openai"] = {
+            "status": "not_configured",
+            "message": "OpenAI API key not set. AI features will be disabled.",
         }
         health_status["status"] = "degraded"
 

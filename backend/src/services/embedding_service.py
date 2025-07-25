@@ -1,6 +1,6 @@
 """Embedding service for creating vector embeddings of text."""
 
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import openai
 
 from src.core.config import settings
@@ -14,7 +14,13 @@ class EmbeddingService:
 
     def __init__(self):
         """Initialize embedding service."""
-        self.client = openai.OpenAI(api_key=settings.openai_api_key)
+        if not settings.openai_api_key:
+            logger.warning(
+                "OpenAI API key not configured. Embedding service will be disabled."
+            )
+            self.client = None
+        else:
+            self.client = openai.OpenAI(api_key=settings.openai_api_key)
 
     async def create_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
@@ -26,6 +32,11 @@ class EmbeddingService:
         Returns:
             List of embedding vectors
         """
+        if not self.client:
+            raise RuntimeError(
+                "OpenAI API key not configured. Cannot create embeddings."
+            )
+
         try:
             response = self.client.embeddings.create(
                 model="text-embedding-3-small", input=texts
@@ -66,6 +77,11 @@ class EmbeddingService:
         Returns:
             List of embedding vectors
         """
+        if not self.client:
+            raise RuntimeError(
+                "OpenAI API key not configured. Cannot create embeddings."
+            )
+
         all_embeddings = []
 
         for i in range(0, len(texts), batch_size):

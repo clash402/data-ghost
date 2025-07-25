@@ -14,6 +14,11 @@ primary_region = 'iad'
 
 [env]
   PORT = '8000'
+  DEBUG = 'false'
+  LOG_LEVEL = 'INFO'
+  CHROMA_DB_PATH = '/app/chroma_db'
+  UPLOAD_DIR = '/app/uploads'
+  CORS_ORIGINS = '["http://localhost:3000", "http://127.0.0.1:3000", "https://data-ghost-frontend.fly.dev"]'
 
 [[services]]
   protocol = 'tcp'

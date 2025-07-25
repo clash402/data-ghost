@@ -20,6 +20,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the project files
 COPY . .
 
+# Create required directories
+RUN mkdir -p /app/chroma_db /app/uploads /app/data
+
+# Set proper permissions
+RUN chmod -R 755 /app/chroma_db /app/uploads /app/data
+
 # Expose port (Fly expects 8000)
 EXPOSE 8000
 

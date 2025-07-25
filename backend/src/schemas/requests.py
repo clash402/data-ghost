@@ -1,6 +1,6 @@
 """Request schemas for API endpoints."""
 
-from typing import Optional
+from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
 
 
@@ -8,8 +8,8 @@ class AskQueryRequest(BaseModel):
     """Request schema for asking questions about CSV data."""
 
     question: str = Field(..., description="The question to ask about the data")
-    context: Optional[str] = Field(
-        None, description="Additional context or data to consider"
+    context: Optional[Dict[str, Any]] = Field(
+        None, description="Additional context data about the CSV"
     )
     session_id: Optional[str] = Field(
         None, description="Session identifier for conversation continuity"

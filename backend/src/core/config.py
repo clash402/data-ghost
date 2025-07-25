@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     debug: bool = Field(default=False, env="DEBUG")
 
     # OpenAI Configuration
-    openai_api_key: str = Field(..., env="OPENAI_API_KEY")
+    openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
     openai_model: str = Field(default="gpt-4o-mini", env="OPENAI_MODEL")
 
     # ElevenLabs Configuration
