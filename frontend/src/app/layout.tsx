@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   description: "Upload your CSV data and ask questions about it with AI-powered analysis",
   keywords: ["CSV", "data analysis", "AI", "query", "spreadsheet"],
   authors: [{ name: "Data Ghost Team" }],
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export const viewport: Viewport = {
