@@ -2,7 +2,8 @@ name: Deploy Frontend to Vercel
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - 'frontend/**'
       - '.github/workflows/deploy-frontend.yml'
