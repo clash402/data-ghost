@@ -1,6 +1,7 @@
 import { AskQueryRequest, AskQueryResponse, UploadResponse } from '@/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://data-ghost-backend.fly.dev';
+console.log('🔧 API_BASE_URL from client.ts:', API_BASE_URL);
 
 class ApiClient {
   private baseUrl: string;

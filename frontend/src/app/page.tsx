@@ -64,6 +64,7 @@ function DataGhostApp() {
 
   // Get backend URL for display
   const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://data-ghost-backend.fly.dev';
+  console.log('🔧 backendUrl from page.tsx:', backendUrl);
 
   fetch(`${backendUrl}/health`)
   .then(response => response.json()) // Parse the JSON data from the response
