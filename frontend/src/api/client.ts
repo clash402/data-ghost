@@ -65,6 +65,10 @@ class ApiClient {
       body: JSON.stringify(request),
     });
   }
+
+  async healthCheck(): Promise<{ status: string; service: string; version: string; environment: string }> {
+    return this.request<{ status: string; service: string; version: string; environment: string }>('/health/');
+  }
 }
 
 export const apiClient = new ApiClient(); 

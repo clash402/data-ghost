@@ -78,10 +78,10 @@ function DataGhostApp() {
   const backendUrl = getBackendUrl();
   console.log('🔧 backendUrl from page.tsx:', backendUrl);
 
-  fetch(`${backendUrl}/health`)
+  fetch(`${backendUrl}/health/`)
   .then(response => response.json()) // Parse the JSON data from the response
-  .then(data => console.log(data))   // Handle the parsed data
-  .catch(error => console.error('Error fetching data:', error)); // Handle any errors during the fetch operation
+  .then(data => console.log('✅ Health check successful:', data))   // Handle the parsed data
+  .catch(error => console.error('❌ Error fetching data:', error)); // Handle any errors during the fetch operation
 
   return (
     <div className="min-h-screen bg-background flex flex-col transition-colors duration-500">
