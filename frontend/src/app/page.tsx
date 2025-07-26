@@ -62,6 +62,14 @@ function DataGhostApp() {
     }
   };
 
+  // Get backend URL for display
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://data-ghost-backend.fly.dev';
+
+  fetch(`${backendUrl}/health`)
+  .then(response => response.json()) // Parse the JSON data from the response
+  .then(data => console.log(data))   // Handle the parsed data
+  .catch(error => console.error('Error fetching data:', error)); // Handle any errors during the fetch operation
+
   return (
     <div className="min-h-screen bg-background flex flex-col transition-colors duration-500">
       <Header />

@@ -18,5 +18,5 @@ echo "🔥 Starting FastAPI server on http://localhost:8080"
 echo "Press Ctrl+C to stop"
 echo ""
 
-# python -m uvicorn src.main:app --host 0.0.0.0 --port 8080 --reload
-python -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8080}
+# python -m uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+uv run python -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}
