@@ -1,6 +1,19 @@
 import { AskQueryRequest, AskQueryResponse, UploadResponse } from '@/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://data-ghost-backend.fly.dev';
+// Ensure we always use HTTPS for the deployed backend
+const getApiBaseUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl) {
+    // If it's the deployed backend URL, ensure it uses HTTPS
+    if (envUrl.includes('data-ghost-backend.fly.dev')) {
+      return envUrl.replace('http://', 'https://');
+    }
+    return envUrl;
+  }
+  return 'https://data-ghost-backend.fly.dev';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 console.log('🔧 API_BASE_URL from client.ts:', API_BASE_URL);
 
 class ApiClient {

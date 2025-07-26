@@ -62,8 +62,20 @@ function DataGhostApp() {
     }
   };
 
-  // Get backend URL for display
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://data-ghost-backend.fly.dev';
+  // Get backend URL for display - ensure HTTPS for deployed backend
+  const getBackendUrl = () => {
+    const envUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (envUrl) {
+      // If it's the deployed backend URL, ensure it uses HTTPS
+      if (envUrl.includes('data-ghost-backend.fly.dev')) {
+        return envUrl.replace('http://', 'https://');
+      }
+      return envUrl;
+    }
+    return 'https://data-ghost-backend.fly.dev';
+  };
+  
+  const backendUrl = getBackendUrl();
   console.log('🔧 backendUrl from page.tsx:', backendUrl);
 
   fetch(`${backendUrl}/health`)
