@@ -37,7 +37,12 @@ class Settings(BaseSettings):
 
     # CORS Configuration
     cors_origins: list[str] = Field(
-        default=["http://localhost:3000", "http://127.0.0.1:3000"], env="CORS_ORIGINS"
+        default=[
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "https://data-ghost.vercel.app",
+        ],
+        env="CORS_ORIGINS",
     )
 
     class Config:
